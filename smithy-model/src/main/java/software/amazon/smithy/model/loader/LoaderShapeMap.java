@@ -330,6 +330,8 @@ final class LoaderShapeMap {
     ) {
         try {
             AbstractShapeBuilder<?, ?> builder = defineShape.builder();
+            ModelUpgrader.patchShapeBeforeBuilding(defineShape, builder, events);
+
             for (MemberShape.Builder memberBuilder : defineShape.memberBuilders().values()) {
                 for (ShapeModifier modifier : defineShape.modifiers()) {
                     modifier.modifyMember(builder, memberBuilder, traitClaimer, createdShapeMap);

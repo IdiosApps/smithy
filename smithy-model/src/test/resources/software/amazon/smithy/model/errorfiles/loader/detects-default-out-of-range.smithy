@@ -11,6 +11,21 @@ structure Integers {
     @range(min: 1)
     invalidMin: PrimitiveInteger,
 
-    @range(max: -1)
+    @range(max: -1, min: -100)
     invalidMax: PrimitiveInteger,
+
+    invalidTargetMin: MinOne,
+
+    invalidTagetMax: MaxNegativeOne,
+
+    invalidMinWithMax: MinAndMax
 }
+
+@range(min: 1)
+integer MinOne
+
+@range(min: 1, max: 100)
+integer MinAndMax
+
+@range(max: -1)
+integer MaxNegativeOne
