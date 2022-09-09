@@ -35,7 +35,6 @@ import software.amazon.smithy.model.node.StringNode;
 import software.amazon.smithy.model.shapes.AbstractShapeBuilder;
 import software.amazon.smithy.model.shapes.MemberShape;
 import software.amazon.smithy.model.shapes.Shape;
-import software.amazon.smithy.model.shapes.ShapeId;
 import software.amazon.smithy.model.shapes.ShapeType;
 import software.amazon.smithy.model.shapes.StructureShape;
 import software.amazon.smithy.model.traits.AddedDefaultTrait;
@@ -76,16 +75,6 @@ final class ModelUpgrader {
             ShapeType.LONG,
             ShapeType.FLOAT,
             ShapeType.DOUBLE);
-
-    // Box traits have potentially not been patched in yet, so track the prelude shapes that were boxed in v1.
-    private static final Set<ShapeId> HAD_BOX_IN_PRELUDE_IN_V1 = SetUtils.of(
-            ShapeId.from("smithy.api#Boolean"),
-            ShapeId.from("smithy.api#Byte"),
-            ShapeId.from("smithy.api#Short"),
-            ShapeId.from("smithy.api#Integer"),
-            ShapeId.from("smithy.api#Long"),
-            ShapeId.from("smithy.api#Float"),
-            ShapeId.from("smithy.api#Double"));
 
     private final Model model;
     private final List<ValidationEvent> events;
@@ -198,9 +187,7 @@ final class ModelUpgrader {
     }
 
     private boolean memberAndTargetAreNotAlreadyExplicitlyBoxed(MemberShape member, Shape target) {
-        return !member.hasTrait(BoxTrait.ID)
-               && !target.hasTrait(BoxTrait.ID)
-               && !HAD_BOX_IN_PRELUDE_IN_V1.contains(target.getId());
+        return !member.hasTrait(BoxTrait.ID) && !target.hasTrait(BoxTrait.ID);
     }
 
     // The addedDefault trait implies that a member did not previously have a default, and a default value
@@ -258,7 +245,7 @@ final class ModelUpgrader {
     }
 
     private static boolean isBuilderBoxed(AbstractShapeBuilder<?, ?> builder) {
-        return HAD_BOX_IN_PRELUDE_IN_V1.contains(builder.getId()) || builder.getAllTraits().containsKey(BoxTrait.ID);
+        return builder.getAllTraits().containsKey(BoxTrait.ID);
     }
 
     private static Node getDefaultValueOfType(FromSourceLocation sourceLocation, ShapeType type) {

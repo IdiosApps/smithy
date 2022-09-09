@@ -39,15 +39,6 @@ import software.amazon.smithy.utils.Pair;
 
 public class ModelUpgraderTest {
     @Test
-    public void preludeShapesAreBoxed() {
-        Model model = Model.assembler().assemble().unwrap();
-
-        assertThat(model.expectShape(ShapeId.from("smithy.api#Boolean")).hasTrait(BoxTrait.class), is(true));
-        assertThat(model.expectShape(ShapeId.from("smithy.api#Integer")).hasTrait(BoxTrait.class), is(true));
-        assertThat(model.expectShape(ShapeId.from("smithy.api#PrimitiveBoolean")).hasTrait(BoxTrait.class), is(false));
-    }
-
-    @Test
     public void upgradesWhenAllModelsUse1_0() {
         UpgradeTestCase testCase = UpgradeTestCase.createAndValidate("upgrade/all-1.0");
         ValidatedResult<Model> result = testCase.actualModel;
